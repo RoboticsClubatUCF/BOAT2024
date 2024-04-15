@@ -26,7 +26,7 @@ const char* loginIndex =
                 "<br>"
             "</td>"
             "<br>"
-            "<br>"
+            "<br>"//
         "</tr>"
         "<tr>"
              "<td>Username:</td>"
@@ -120,12 +120,12 @@ int CH7 = 0;
 //#define POWER_RELAY_PWM 1
 
 // values for potentiometer
-#define POTENTIOMETER_MIDDLE 185
+#define POTENTIOMETER_MIDDLE 253
 #define POTENTIOMETER_ERROR 5
 
 // VESC control with PWM
 #define PWM_CHANNEL 0
-#define PWM_FREQUENCY 50 // was 980?
+#define PWM_FREQUENCY 100 // was 980?
 #define PWM_RESOLUTION 8
 
 // rudder control
@@ -171,17 +171,18 @@ void handleRudder()
   int stepper_input = map(data.ch[0], PWM_MIN, PWM_MAX, 135, 225);
   rudderInput.add(stepper_input);
   int smoothed_stepper_input = rudderInput.get();
-  //Serial.print("Stepper Input: "); Serial.println(smoothed_stepper_input);
+  Serial.print("Stepper Input: "); Serial.println(smoothed_stepper_input);
   int actual_angle_measurment = map(analogRead(34), 0, 4095, 0, 360) + (180 - POTENTIOMETER_MIDDLE);
   //Serial.print("Read Value: "); Serial.println(analogRead(34));
   actualAngle.add(actual_angle_measurment);
   int smoothed_actual_angle = actualAngle.get();
-  //Serial.print("Actual Angle: "); Serial.println(actual_angle_measurment);
+  Serial.print("Actual Angle: "); Serial.println(actual_angle_measurment);
   //delay(50);
 
   /*
   Possible angles: 135-225**
   */
+
 
   int current_error = smoothed_actual_angle - smoothed_stepper_input;
   if(abs(current_error < 5)) { // if close to correct angle
@@ -225,6 +226,7 @@ void handleRudder()
           stepper.move(1); // move left
         }
     }
+    
   }
   //delay(100);
 }
@@ -237,7 +239,7 @@ void loop(void) {
 
   //Serial.println(data.ch[2]);
   int relay_output = map(data.ch[6], RELAY_MIN, RELAY_MAX, 0,1);
-  int VESC_output = map(data.ch[2], 200, 1800, 0, 255);
+  int VESC_output = map(data.ch[2], 150, 1850, 0, 255);
 
   //Serial.println(data.ch[2]);
   //Serial.println(VESC_output);
